@@ -1,0 +1,21 @@
+find_package(GTest CONFIG REQUIRED)
+if(GTest_VERSION VERSION_LESS "1.17.0")
+    message(FATAL_ERROR "GTest >= 1.17.0 required, found ${GTest_VERSION} at ${GTest_DIR}")
+endif()
+
+add_library(mimage_test_main STATIC support/gtest_main.cpp)
+target_link_libraries(mimage_test_main PUBLIC GTest::gtest)
+target_compile_options(mimage_test_main PRIVATE ${MIMAGE_WARNINGS})
+
+function(mimage_add_test name source labels)
+    add_executable(${name} ${source})
+    target_link_libraries(${name} PRIVATE mimage::mimage mimage_test_main)
+    target_compile_options(${name} PRIVATE ${MIMAGE_WARNINGS})
+    add_test(NAME ${name} COMMAND ${name})
+    set_tests_properties(${name} PROPERTIES LABELS "${labels}")
+endfunction()
+
+mimage_add_test(mimage_image_tests unit/image_tests.cpp "unit;image")
+set_tests_properties(mimage_image_tests PROPERTIES TIMEOUT 30)
+mimage_add_test(mimage_log_tests unit/log_tests.cpp "unit;log")
+set_tests_properties(mimage_log_tests PROPERTIES TIMEOUT 30)
