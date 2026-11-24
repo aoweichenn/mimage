@@ -118,3 +118,23 @@
 
 `Log.IsSilentWhenNoHandlerInstalled`、`Log.ForwardsLevelMessageAndUserData`、
 `Log.CanBeReplacedAndCleared`。
+
+## REQ-011 · 像素布局转换
+
+**契约**
+
+* `from_pixels` / `from_pixels_resize` / `from_pixels_roi` /
+  `from_pixels_roi_resize` 把交错 RGB/BGR/GRAY/RGBA/BGRA 转成 planar
+  `mmat::Mat`，支持 stride 与 allocator。
+* `to_pixels` / `to_pixels_resize` 做反向转换，支持 stride。
+* `yuv420sp2rgb` / `yuv420sp2rgb_nv12` / `yuv420sp2rgb_half` 提供 YUV420SP
+  到 RGB 的近似转换。
+* 枚举值与 ncnn `Mat::PixelType` 完全一致。
+
+**验收**
+
+`Pixel.FromRgbCreatesPlanarMat`、`Pixel.FromPixelsWithStride`、
+`Pixel.FromPixelsResize`、`Pixel.FromPixelsRoi`、`Pixel.FromPixelsRoiResize`、
+`Pixel.ToPixelsRoundTrip`、`Pixel.ToPixelsWritesGray`、`Pixel.ToPixelsResize`、
+`Pixel.ToPixelsWithStride`、`Pixel.ToPixelsResizeWithStride`、
+`Pixel.Yuv420SpToRgb`、`Pixel.Yuv420SpNv12ToRgb`、`Pixel.Yuv420SpHalfToRgb`。

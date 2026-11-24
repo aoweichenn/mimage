@@ -31,10 +31,12 @@ run "用例断言"    python3 "$(dirname "$0")/check-test-assertions.py" --check
 run "构建零告警"  "$(dirname "$0")/build.sh" test
 run "头文件"      python3 "$(dirname "$0")/check-headers.py" --check "$lib" \
                       --build-include "$(mimage_build_dir test)/include" \
+                      --build-include "$lib/../mmat/include" \
+                      --build-include "$(mimage_build_dir test)/mmat/include" \
                       --build-include "$lib/../mmemory/include" \
-                      --build-include "$(mimage_build_dir test)/mmemory/include" \
+                      --build-include "$(mimage_build_dir test)/mmat/mmemory/include" \
                       --build-include "$lib/../mplatform/include" \
-                      --build-include "$(mimage_build_dir test)/mmemory/mplatform/include"
+                      --build-include "$(mimage_build_dir test)/mmat/mmemory/mplatform/include"
 run "测试"        ctest --test-dir "$(mimage_build_dir test)" --output-on-failure
 run "安装包"      "$(dirname "$0")/package-test.sh"
 

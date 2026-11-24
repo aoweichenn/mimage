@@ -31,8 +31,9 @@ run_tidy() {
     (cd "$lib" && for f in $files; do
         clang-tidy "$f" --quiet -- \
             -std=c++20 -I"$lib/include" -I"$build_dir/include" -I"$lib/src" -isystem "$lib/third_party" \
-            -I"$lib/../mmemory/include" -I"$build_dir/mmemory/include" \
-            -I"$lib/../mplatform/include" -I"$build_dir/mmemory/mplatform/include" 2>&1 | \
+            -I"$lib/../mmat/include" -I"$build_dir/mmat/include" \
+            -I"$lib/../mmemory/include" -I"$build_dir/mmat/mmemory/include" \
+            -I"$lib/../mplatform/include" -I"$build_dir/mmat/mmemory/mplatform/include" 2>&1 | \
             grep -vE "^[0-9]+ warnings? generated|^Suppressed" || true
     done) | tee "$work_dir/tidy.log"
     if grep -qE "warning:|error:" "$work_dir/tidy.log"; then

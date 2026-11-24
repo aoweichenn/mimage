@@ -21,13 +21,14 @@ endif()
 option(mimage_build_tests "Build mimage tests" ${PROJECT_IS_TOP_LEVEL})
 option(MIMAGE_SANITIZE "Enable ASan+UBSan" OFF)
 
-if(NOT TARGET mmemory::mmemory)
-    set(MIMAGE_MMEMORY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../mmemory" CACHE PATH "mmemory source directory")
-    if(NOT EXISTS "${MIMAGE_MMEMORY_DIR}/CMakeLists.txt")
-        message(FATAL_ERROR "mimage requires the mmemory source tree; set MIMAGE_MMEMORY_DIR")
+if(NOT TARGET mmat::mmat)
+    set(MIMAGE_MMAT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../mmat" CACHE PATH "mmat source directory")
+    if(NOT EXISTS "${MIMAGE_MMAT_DIR}/CMakeLists.txt")
+        message(FATAL_ERROR "mimage requires the mmat source tree; set MIMAGE_MMAT_DIR")
     endif()
-    set(mmemory_build_tests OFF CACHE BOOL "" FORCE)
-    add_subdirectory("${MIMAGE_MMEMORY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/mmemory")
+    set(MMAT_MMEMORY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../mmemory" CACHE PATH "" FORCE)
+    set(mmat_build_tests OFF CACHE BOOL "" FORCE)
+    add_subdirectory("${MIMAGE_MMAT_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/mmat")
 endif()
 
 set(MIMAGE_WARNINGS_COMMON
@@ -90,6 +91,7 @@ add_library(mimage_objs OBJECT
     src/image.cpp
     src/resize.cpp
     src/drawing.cpp
+    src/pixel.cpp
     src/log.cpp)
 target_include_directories(mimage_objs
     PUBLIC
@@ -98,7 +100,7 @@ target_include_directories(mimage_objs
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party
-        $<TARGET_PROPERTY:mmemory::mmemory,INTERFACE_INCLUDE_DIRECTORIES>)
+        $<TARGET_PROPERTY:mmat::mmat,INTERFACE_INCLUDE_DIRECTORIES>)
 target_compile_options(mimage_objs PRIVATE ${MIMAGE_WARNINGS_PORTED})
 target_link_libraries(mimage_objs PRIVATE mimage_sanitizer)
 
@@ -106,6 +108,7 @@ add_library(mimage STATIC)
 # Self-contained archive: Image + codecs + resize/drawing + mmemory + mplatform.
 target_link_libraries(mimage PUBLIC
     $<BUILD_INTERFACE:mimage_objs>
+    $<BUILD_INTERFACE:mmat_objs>
     $<BUILD_INTERFACE:mmemory_objs>
     $<BUILD_INTERFACE:mplatform_objs>)
 add_library(mimage::mimage ALIAS mimage)
@@ -127,13 +130,17 @@ if(PROJECT_IS_TOP_LEVEL)
     install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/mimage/config.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mimage)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../mmat/include/mmat
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mmat/include/mmat/config.hpp
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmat)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../mmemory/include/mmemory
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mmemory/include/mmemory/config.hpp
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mmat/mmemory/include/mmemory/config.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmemory)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../mplatform/include/mplatform
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mmemory/mplatform/include/mplatform/config.hpp
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mmat/mmemory/mplatform/include/mplatform/config.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mplatform)
     install(EXPORT mimageTargets
         NAMESPACE mimage::

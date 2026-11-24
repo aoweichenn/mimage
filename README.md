@@ -3,8 +3,7 @@
 `mcnn` 的图像容器与基础处理模块：交错 8-bit `Image`、编解码、双线性缩放、
 矩形/圆/线/文字绘制，以及可注入的日志接口。C++20，无外部运行时依赖。
 
-**范围刻意很窄**：不包含 `mmat::Mat` 的 planar/packed 像素转换、YUV 旋转/仿射、
-Vulkan 图像。这些留给 M2。
+**范围刻意很窄**：不包含 YUV 旋转/仿射与 Vulkan 图像。这些留给 M2。
 
 ## 能力
 
@@ -15,6 +14,7 @@ Vulkan 图像。这些留给 M2。
 | `imread` / `imdecode` / `imwrite`（JPEG/PNG/BMP/PNM） | ✅ |
 | 双线性缩放（1/3/4 通道，stride，YUV420SP） | ✅ |
 | 矩形/圆/线/文字绘制 | ✅ |
+| 像素布局转换（`from_pixels` / `to_pixels` / YUV420SP） | ✅ |
 | 可注入日志 handler（默认静默） | ✅ |
 
 ## 快速开始

@@ -24,12 +24,12 @@ scripts/check-all.sh
 | --- | --- |
 | format / types / headers / layers | 通过 |
 | no-printf / no-throw / magic | 通过（移植文件走 allow-file） |
-| traceability | 10 条需求、16 个用例 |
-| API coverage | 21/21 |
+| traceability | 11 条需求、29 个用例 |
+| API coverage | 30/30 |
 | nodiscard | 0/0 |
-| 用例断言 | 16/16 |
+| 用例断言 | 29/29 |
 | GCC 零告警 | 0（stb 第三方不计入） |
-| 单元测试 | 16/16（2 个 suite） |
+| 单元测试 | 29/29（3 个 suite） |
 | 安装包消费方 | 通过 |
 
 ## 2. 双编译器
@@ -39,7 +39,7 @@ scripts/build.sh test
 scripts/build.sh test --clang
 ```
 
-两者均 `零告警 ✓`，Clang 下 16/16 通过。
+两者均 `零告警 ✓`，Clang 下 29/29 通过。
 
 ## 3. 内存、线程与静态分析
 
@@ -77,8 +77,8 @@ scripts/package-test.sh
 
 | 项 | 原因 |
 | --- | --- |
-| ncnn simpleocv 替换 | M2 集成步骤 |
-| `mmat::Mat` 像素转换 | M2 范围 |
+| YUV 旋转/仿射 | M2 后续 |
 | JPEG/BMP 往返 | 只验证 PNG；三者走同一 stb 路径 |
+| ncnn simpleocv 编译 | 已在 `NCNN_SIMPLEOCV=ON` 下通过；examples 未全量构建 |
 | 非 x86 运行时 | NEON/SSE 分支只做编译期与代码审查 |
 | 真实 OOM | 未做 RLIMIT_AS 子进程注入 |

@@ -117,6 +117,15 @@ def collect_public_symbols() -> dict[str, tuple[str, int]]:
     for match in EXPORTED.finditer(text):
         keep(match.group("name"), match.start())
 
+    pixel_path = PUBLIC / "pixel.hpp"
+    pixel_text = pixel_path.read_text(encoding="utf-8")
+    pixel_rel = pixel_path.relative_to(LIB).as_posix()
+    for match in EXPORTED.finditer(pixel_text):
+        name = match.group("name")
+        if name in IGNORED or name.startswith(IGNORED_PREFIXES):
+            continue
+        symbols.setdefault(name, (pixel_rel, pixel_text.count("\n", 0, match.start()) + 1))
+
     log_path = PUBLIC / "log.hpp"
     log_text = log_path.read_text(encoding="utf-8")
     log_rel = log_path.relative_to(LIB).as_posix()

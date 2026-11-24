@@ -12,8 +12,7 @@ M1 负责 8-bit 交错图像：
 
 **不包含**：
 
-* `mmat::Mat` 的 planar/packed 像素转换（`from_pixels` / `to_pixels`）；
-* YUV 旋转、仿射变换；
+* YUV 旋转、仿射变换（`mat_pixel_rotate.cpp` / `mat_pixel_affine.cpp`）；
 * Vulkan / GPU 图像。
 
 这些留给 M2。
@@ -63,10 +62,19 @@ void set_log_handler(LogHandler, void*) noexcept;
 mimage → mmemory → mplatform
 ```
 
-当前不依赖 mmat。M2 的像素转换会引入 `mimage/pixel.hpp`，届时增加
-`mimage → mmat` 的单向依赖。
+依赖方向 `mimage → mmat → mmemory → mplatform`。`pixel.hpp` 的转换函数
+直接返回/接收 `mmat::Mat`，ncnn 的 `Mat` 派生类可以零拷贝转发。
 
-## 7. ncnn 兼容
+## 7. 像素转换
+
+`pixel.hpp` 复刻 ncnn `Mat::PixelType` 的枚举值与语义：
+
+* `from_pixels*` 把交错像素转成 `mmat::Mat` 的 planar 布局（3D，elemsize 4）；
+* `to_pixels*` 反向转换，支持 stride 与目标缩放；
+* `yuv420sp2rgb*` 保留 ncnn 的近似公式；
+* allocator 参数类型为 `mmemory::Allocator*`，ncnn 的 `Allocator*` 直接传入。
+
+## 8. ncnn 兼容
 
 `Image` 的公开字段与方法对齐 ncnn `simpleocv::Mat`：
 
