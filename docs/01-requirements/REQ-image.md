@@ -138,3 +138,19 @@
 `Pixel.ToPixelsRoundTrip`、`Pixel.ToPixelsWritesGray`、`Pixel.ToPixelsResize`、
 `Pixel.ToPixelsWithStride`、`Pixel.ToPixelsResizeWithStride`、
 `Pixel.Yuv420SpToRgb`、`Pixel.Yuv420SpNv12ToRgb`、`Pixel.Yuv420SpHalfToRgb`。
+
+## REQ-012 · 旋转与仿射变换
+
+**契约**
+
+* `kanna_rotate_c1/c2/c3/c4`（含 stride）与 `kanna_rotate_yuv420sp`。
+* `get_rotation_matrix`、`get_affine_transform`、`invert_affine_transform`。
+* `warpaffine_bilinear_c1/c2/c3/c4`（含 stride）与 yuv420sp 版本。
+* 枚举/参数语义与 ncnn 保持一致。
+
+**验收**
+
+`Transform.KannaRotateIdentityKeepsPixels`、`Transform.KannaRotateChangesDimensions`、
+`Transform.KannaRotateYuvIdentity`、`Transform.RotationMatrixIsIdentityAtZero`、
+`Transform.AffineTransformFromTranslationPoints`、`Transform.WarpAffineIdentityKeepsPixels`、
+`Transform.WarpAffineYuvIsCallable`。

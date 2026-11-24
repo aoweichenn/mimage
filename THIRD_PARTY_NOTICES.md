@@ -2,9 +2,9 @@
 
 ## ncnn image / simpleocv
 
-`src/image.cpp`、`src/resize.cpp`、`src/drawing.cpp`、`src/pixel.cpp`、
-`src/mat_pixel_drawing_font.h` 的图像容器、编解码封装、双线性缩放、绘制和
-像素布局转换算法
+`src/image.cpp`、`src/resize.cpp`、`src/drawing.cpp`、`src/pixel.cpp`、`src/rotate.cpp`、`src/affine.cpp`、
+`src/mat_pixel_drawing_font.h` 的图像容器、编解码封装、双线性缩放、绘制、
+像素布局转换、旋转和仿射算法
 来自 ncnn（Tencent，BSD-3-Clause，Copyright 2017-2023 Tencent）。
 
 本仓库的改动：

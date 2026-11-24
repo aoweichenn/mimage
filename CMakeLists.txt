@@ -92,6 +92,8 @@ add_library(mimage_objs OBJECT
     src/resize.cpp
     src/drawing.cpp
     src/pixel.cpp
+    src/rotate.cpp
+    src/affine.cpp
     src/log.cpp)
 target_include_directories(mimage_objs
     PUBLIC

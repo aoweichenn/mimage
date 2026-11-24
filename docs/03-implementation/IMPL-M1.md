@@ -6,12 +6,15 @@
 include/mimage/
   image.hpp        Image/Scalar/Point/Size/Rect + codec/resize/drawing 声明
   pixel.hpp        像素布局枚举 + from_pixels/to_pixels/YUV 声明
+  transform.hpp    旋转与仿射声明
   log.hpp          可注入日志接口 + MIMAGE_LOG* 宏
   mimage.hpp       伞头
 
 src/
   image.cpp        编解码 + Image 高层 resize/drawing 包装
   pixel.cpp        交错像素 <-> planar mmat::Mat + YUV420SP
+  rotate.cpp       kanna 旋转
+  affine.cpp       仿射矩阵 + warpaffine
   resize.cpp       resize_bilinear_c1/c2/c3/c4 + stride + yuv420sp
   drawing.cpp      矩形/圆/线/文字 raw 绘制
   log.cpp          handler 存储与 vsnprintf 格式化
@@ -36,6 +39,8 @@ tests/package/consumer/
 | `src/mat_pixel_resize.cpp` | `src/resize.cpp` | 原样算法，类型固定宽度 |
 | `src/mat_pixel_drawing.cpp` | `src/drawing.cpp` | 原样算法，字体表作为私有头 |
 | `src/mat_pixel.cpp` | `src/pixel.cpp` | 自由函数化，`Mat`→`mmat::Mat`，`Allocator*`→`mmemory::Allocator*` |
+| `src/mat_pixel_rotate.cpp` | `src/rotate.cpp` | 原样 kanna 旋转，类型固定宽度 |
+| `src/mat_pixel_affine.cpp` | `src/affine.cpp` | 原样 warpaffine，矩阵函数保留 |
 | `src/mat_pixel_drawing_font.h` | `src/` | 数据表，`unsigned char`→`std::uint8_t` |
 | `src/stb_image*.h` | `third_party/` | 原样 vendored |
 

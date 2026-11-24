@@ -12,7 +12,7 @@ M1 负责 8-bit 交错图像：
 
 **不包含**：
 
-* YUV 旋转、仿射变换（`mat_pixel_rotate.cpp` / `mat_pixel_affine.cpp`）；
+* 其他图像格式与 GPU 图像。
 * Vulkan / GPU 图像。
 
 这些留给 M2。
@@ -74,7 +74,12 @@ mimage → mmemory → mplatform
 * `yuv420sp2rgb*` 保留 ncnn 的近似公式；
 * allocator 参数类型为 `mmemory::Allocator*`，ncnn 的 `Allocator*` 直接传入。
 
-## 8. ncnn 兼容
+## 8. 旋转与仿射
+
+`transform.hpp` 提供 raw-pointer 的 kanna 旋转（1/2/3/4 通道 + YUV420SP）与
+双线性 warpaffine。矩阵函数与 ncnn 数值一致。ncnn 的自由函数只做转发。
+
+## 9. ncnn 兼容
 
 `Image` 的公开字段与方法对齐 ncnn `simpleocv::Mat`：
 

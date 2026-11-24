@@ -126,6 +126,15 @@ def collect_public_symbols() -> dict[str, tuple[str, int]]:
             continue
         symbols.setdefault(name, (pixel_rel, pixel_text.count("\n", 0, match.start()) + 1))
 
+    transform_path = PUBLIC / "transform.hpp"
+    transform_text = transform_path.read_text(encoding="utf-8")
+    transform_rel = transform_path.relative_to(LIB).as_posix()
+    for match in EXPORTED.finditer(transform_text):
+        name = match.group("name")
+        if name in IGNORED or name.startswith(IGNORED_PREFIXES):
+            continue
+        symbols.setdefault(name, (transform_rel, transform_text.count("\n", 0, match.start()) + 1))
+
     log_path = PUBLIC / "log.hpp"
     log_text = log_path.read_text(encoding="utf-8")
     log_rel = log_path.relative_to(LIB).as_posix()

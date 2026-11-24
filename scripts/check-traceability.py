@@ -56,7 +56,7 @@ def check(mode: str) -> int:
     cases = collect_test_cases()
     problems: list[str] = []
 
-    expected = [f"REQ-{index:03d}" for index in range(1, 12)]
+    expected = [f"REQ-{index:03d}" for index in range(1, 13)]
     missing = [req for req in expected if req not in requirements]
     if missing:
         problems.append(f"追溯矩阵缺少需求: {', '.join(missing)}")
